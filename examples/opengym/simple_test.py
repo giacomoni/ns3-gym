@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import gym
+import gymnasium as gym
 import argparse
 import ns3gym
 from ns3gym import ns3env

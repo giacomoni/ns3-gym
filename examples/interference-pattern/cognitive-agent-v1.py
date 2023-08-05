@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import gym
+import gymnasium as gym
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 import numpy as np

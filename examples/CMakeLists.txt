@@ -50,6 +50,15 @@ build_lib_example(
 )
 
 build_lib_example(
+  NAME cartpole
+  SOURCE_FILES cartpole/cartpolegym.cc
+               cartpole/cartpole.cc
+  LIBRARIES_TO_LINK
+    ${libcore}
+    ${libopengym}
+)
+
+build_lib_example(
   NAME rl-tcp
   SOURCE_FILES rl-tcp/sim.cc
                rl-tcp/tcp-rl-env.cc

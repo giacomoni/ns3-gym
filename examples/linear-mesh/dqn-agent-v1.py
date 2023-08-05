@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import scipy.io as io
-import gym
+import gymnasium as gym
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 import numpy as np

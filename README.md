@@ -72,7 +72,7 @@ All examples can be found [here](./examples/).
 
 1. Example Python script. Note, that `gym.make('ns3-v0')` starts ns-3 simulation script located in current working directory.
 ```
-import gym
+import gymnasium as gym
 import ns3gym
 import MyAgent
 from ns3gym import ns3env

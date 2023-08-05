@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-import gym
+import gymnasium as gym
 import os
 import numpy as np
 from ns3gym import ns3env

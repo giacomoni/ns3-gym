@@ -5,9 +5,9 @@ import time
 
 import numpy as np
 
-import gym
-from gym import spaces
-from gym.utils import seeding
+import gymnasium as gym
+from gymnasium import spaces
+from gymnasium.utils import seeding
 from enum import IntEnum
 
 from ns3gym.start_sim import start_sim_script, build_ns3_project
@@ -194,7 +194,7 @@ class Ns3ZmqBridge(object):
                 self.forceEnvStop = True
                 self.send_close_command()
 
-        self.extraInfo = envStateMsg.info
+        self.extraInfo = {"info": envStateMsg.info}
         if not self.extraInfo:
             self.extraInfo = {}
 
@@ -396,17 +396,18 @@ class Ns3Env(gym.Env):
         reward = self.ns3ZmqBridge.get_reward()
         done = self.ns3ZmqBridge.is_game_over()
         extraInfo = self.ns3ZmqBridge.get_extra_info()
-        return (obs, reward, done, extraInfo)
+        truncated = False
+        return (obs, reward, done, truncated,extraInfo)
 
     def step(self, action):
         response = self.ns3ZmqBridge.step(action)
         self.envDirty = True
         return self.get_state()
 
-    def reset(self):
+    def reset(self, *,seed=None, options=None):
         if not self.envDirty:
             obs = self.ns3ZmqBridge.get_obs()
-            return obs
+            return obs, {}
 
         if self.ns3ZmqBridge:
             self.ns3ZmqBridge.close()
@@ -420,7 +421,7 @@ class Ns3Env(gym.Env):
         # get first observations
         self.ns3ZmqBridge.rx_env_state()
         obs = self.ns3ZmqBridge.get_obs()
-        return obs
+        return obs, {}
 
     def render(self, mode='human'):
         return
