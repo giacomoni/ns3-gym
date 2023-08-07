@@ -45,6 +45,9 @@ def build_ns3_project(debug=True):
 		output = None
 
 	build_required = False
+	print("-------------------------------")
+	print(ns3_string)
+	print("-----------------------------")
 	ns3_proc = subprocess.Popen(ns3_string, shell=True, stdout=subprocess.PIPE, stderr=None, universal_newlines=True)
 
 	line_history = []

@@ -12,7 +12,6 @@ import numpy as np
 from ray.rllib.algorithms.dqn import DQNConfig
 from ray.tune.logger import pretty_print
 from ray.tune.registry import register_env
-import logging
 
 def ns3gymapienv_creator(env_config):
 
@@ -30,14 +29,14 @@ register_env("ns3-v0", ns3gymapienv_creator)
 
 if __name__ == '__main__':
 
-    # num_workers = int(sys.argv[1])
-    # seed = int(sys.argv[2])
-
-    seed =1
+    env = sys.argv[1]
+    num_workers = int(sys.argv[2])
+    seed = int(sys.argv[3])
+    
     random.seed(seed)
     np.random.seed(seed)
 
-    ray.init(num_cpus=4, logging_level=logging.DEBUG)
+    ray.init(num_cpus=32)
 
     #env = gym.make()
     stepIdx = 0
@@ -51,19 +50,21 @@ if __name__ == '__main__':
     debug = False
     startSim = 1
 
-    env = ns3env.Ns3Env(port=port, stepTime=stepTime, startSim=startSim, simSeed=seed, simArgs=simArgs, debug=debug)
+    env_config = {"port":port, "stepTime":stepTime, "startSim":startSim, "simSeed":seed, "simArgs":simArgs, "debug":debug}
 
     algo = (
     DQNConfig()
-    .rollouts(num_rollout_workers=1, batch_mode="complete_episodes")
+    .rollouts(num_rollout_workers=num_workers)
     .resources(num_gpus=0)
-    .environment(env='ns3-v0')
+    .environment(env) # "ns3-v0"
     .build()
 )
 
-for i in range(10):
-    result = algo.train()
-    print(pretty_print(result))
+    while True:
+        result = algo.train()
+        print(result['episode_reward_mean'])
+        if result['episode_reward_mean'] >= 450:
+            break
 
 
     # config = {"env": env,

@@ -142,6 +142,7 @@ CartpoleGymEnv::GetObservationSpace()
 
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (-std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), shape, dtype);
 
+
   NS_LOG_UNCOND ("ObservationSpace: " << box);
   return box;
 }
@@ -171,7 +172,7 @@ CartpoleGymEnv::GetGameOver()
   static float stepCounter = 0.0;
   stepCounter += 1;
 
-  if (state[0] < x_threshold * -1 || state[0] > x_threshold || state[2] < theta_threshold_radians * -1 || state[2] > theta_threshold_radians || stepCounter >= 400)
+  if (state[0] < x_threshold * -1 || state[0] > x_threshold || state[2] < theta_threshold_radians * -1 || state[2] > theta_threshold_radians || stepCounter >= 500)
     {
         isGameOver = true;
     }
