@@ -16,7 +16,7 @@ from ray.tune.registry import register_env
 def ns3gymapienv_creator(env_config):
 
     port = 5555 + env_config.worker_index
-    simTime = 400 # seconds
+    simTime = 500 # seconds
     stepTime = 1  # seconds
     seed = 0 + env_config.worker_index
     simArgs = {"--simTime": simTime,
