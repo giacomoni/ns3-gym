@@ -26,7 +26,6 @@ def ns3gymapienv_creator(env_config):
     return ns3env.Ns3Env(port=port, stepTime=stepTime, startSim=startSim, simSeed=seed, simArgs=simArgs, debug=debug)  # return an env instance
 
 register_env("ns3-v0", ns3gymapienv_creator)
-register_env("OmnetGymApiEnv", omnetgymapienv_creator)
 
 if __name__ == '__main__':
 
