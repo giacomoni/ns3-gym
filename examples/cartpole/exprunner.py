@@ -3,9 +3,9 @@ import os
 
 if __name__ == "__main__":
     
-    SEEDS =  [1,10]
+    SEEDS =  [1,10,100]
     ENVS = ["ns3-v0"]
-    WORKERS = [2,4,8,16,31]
+    WORKERS = [32,64]
     
     
     for params in itertools.product(ENVS, WORKERS, SEEDS):
