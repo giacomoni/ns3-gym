@@ -1,5 +1,4 @@
 #import the simulation model with cart-pole
-from build.omnetbind import OmnetGymApi
 import gymnasium as gym
 from gymnasium import spaces, logger
 import numpy as np
@@ -13,68 +12,6 @@ import os
 import math
 from ray.rllib.algorithms.dqn import DQNConfig
 from ns3gym import ns3env
-
-
-
-class OmnetGymApiEnv(gym.Env):
-    def __init__(self,env_config):
-        
-        self.action_space = spaces.Discrete(2)
-        self.runner = OmnetGymApi()
-        self.env_config = env_config
-        self.max_episode_len = 500
-
-        
-        high = np.array(
-            [
-                2.4 * 2,
-                np.finfo(np.float32).max,
-                (12 * 2 * math.pi / 360) * 2,
-                np.finfo(np.float32).max,],
-            dtype=np.float64,)
-        self.observation_space = spaces.Box(-high, high, dtype=np.float64)
-
-       
-    def reset(self, *, seed=None, options=None):
-
-        original_ini_file = self.env_config["iniPath"]
-
-        with open(original_ini_file, 'r') as fin:
-            ini_string = fin.read()
-        
-        ini_string = ini_string.replace("HOME",  os.getenv('HOME'))
-
-        with open(original_ini_file + f".worker{os.getpid()}", 'w') as fout:
-            fout.write(ini_string)
-
-        self.runner.initialise(original_ini_file + f".worker{os.getpid()}")
-        obs = self.runner.reset()
-
-        obs = np.asarray(list(obs['cartpole']),dtype=np.float32)
-        return  obs, {}
-
-    def step(self, action):
-        actions = {'cartpole': action}
-        theta_threshold_radians = 12 * 2 * math.pi / 360
-        x_threshold = 2.4
-        obs, rewards, terminateds, info_ = self.runner.step(actions)
-        reward = round(rewards['cartpole'],4)
-        obs = obs['cartpole']
-
-        if (obs[0] < x_threshold * -1) or (obs[0] > x_threshold) or (obs[2] < theta_threshold_radians * -1) or (obs[2] > theta_threshold_radians):
-            terminateds['cartpole'] = True
-            reward = 0
-
-        if terminateds['cartpole']:
-             self.runner.shutdown()
-             self.runner.cleanup()
-       
-        obs = np.asarray(list(obs),dtype=np.float32)
-    
-        return  obs, reward, terminateds['cartpole'], False,{}
-
-def omnetgymapienv_creator(env_config):
-    return OmnetGymApiEnv(env_config)  # return an env instance
 
 def ns3gymapienv_creator(env_config):
 
