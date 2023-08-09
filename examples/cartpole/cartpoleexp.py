@@ -12,6 +12,8 @@ import os
 import math
 from ray.rllib.algorithms.dqn import DQNConfig
 from ns3gym import ns3env
+from datetime import datetime
+
 
 def ns3gymapienv_creator(env_config):
 
@@ -39,22 +41,24 @@ if __name__ == '__main__':
 
     ray.init(num_cpus=64)
     
-    env_config = {"iniPath": os.getenv('HOME') + "/raynet/configs/cartpole/cartpole.ini"}
 
     algo = (
     DQNConfig()
     .rollouts(num_rollout_workers=num_workers)
     .resources(num_gpus=0)
-    .environment(env, env_config=env_config) # "ns3-v0"
+    .environment(env) # "ns3-v0"
     .build()
 )
 
-    while True:
+    t1 = datetime.now()
+    t2 = datetime.now()
+    while (t2 - t1).total_seconds() <= 2000:
+        print(f"Total elpsed: {(t2 - t1).total_seconds()}")
         result = algo.train()
         print(result['episode_reward_mean'])
         if result['episode_reward_mean'] >= 450:
             break
-
+    t2 = datetime.now()
     ray.shutdown()
 
 
