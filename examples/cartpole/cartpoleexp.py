@@ -12,8 +12,7 @@ import os
 import math
 from ray.rllib.algorithms.dqn import DQNConfig
 from ns3gym import ns3env
-from datetime import datetime
-
+import time
 
 def ns3gymapienv_creator(env_config):
 
@@ -50,15 +49,15 @@ if __name__ == '__main__':
     .build()
 )
 
-    t1 = datetime.now()
-    t2 = datetime.now()
-    while (t2 - t1).total_seconds() <= 2000:
-        print(f"Total elpsed: {(t2 - t1).total_seconds()}")
+    t_start = time.time()
+    now = time.time()
+    while (t_start - now) <= 2000:
+        print(f"Total elpsed: {(t_start - now)}")
         result = algo.train()
         print(result['episode_reward_mean'])
         if result['episode_reward_mean'] >= 450:
             break
-    t2 = datetime.now()
+    now = time.time()
     ray.shutdown()
 
 
