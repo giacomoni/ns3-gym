@@ -57,7 +57,7 @@ if __name__ == '__main__':
         print(result['episode_reward_mean'])
         if result['episode_reward_mean'] >= 450:
             break
-    now = time.time()
+        now = time.time()
     ray.shutdown()
 
 
