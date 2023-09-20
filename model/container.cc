@@ -88,9 +88,9 @@ OpenGymDataContainer::CreateFromDataContainerPbMsg(ns3opengym::DataContainer &da
       actDataContainer = box;
 
     } else if (boxContainerPbMsg.dtype() == ns3opengym::UINT) {
-      Ptr<OpenGymBoxContainer<uint32_t> > box = CreateObject<OpenGymBoxContainer<uint32_t> >();
-      std::vector<uint32_t> myData;
-      myData.assign(boxContainerPbMsg.uintdata().begin(), boxContainerPbMsg.uintdata().end());
+      Ptr<OpenGymBoxContainer<int32_t> > box = CreateObject<OpenGymBoxContainer<int32_t> >();
+      std::vector<int32_t> myData;
+      myData.assign(boxContainerPbMsg.intdata().begin(), boxContainerPbMsg.intdata().end());
       box->SetData(myData);
       actDataContainer = box;
 
@@ -175,7 +175,7 @@ OpenGymDiscreteContainer::OpenGymDiscreteContainer()
   m_n = 0;
 }
 
-OpenGymDiscreteContainer::OpenGymDiscreteContainer(uint32_t n)
+OpenGymDiscreteContainer::OpenGymDiscreteContainer(int32_t n)
 {
   //NS_LOG_FUNCTION (this);
   m_n = n;
@@ -211,13 +211,13 @@ OpenGymDiscreteContainer::GetDataContainerPbMsg()
 }
 
 bool
-OpenGymDiscreteContainer::SetValue(uint32_t value)
+OpenGymDiscreteContainer::SetValue(int32_t value)
 {
   m_value = value;
   return true;
 }
 
-uint32_t
+int32_t
 OpenGymDiscreteContainer::GetValue()
 {
   return m_value;
@@ -292,7 +292,7 @@ OpenGymTupleContainer::Add(Ptr<OpenGymDataContainer> space)
 }
 
 Ptr<OpenGymDataContainer>
-OpenGymTupleContainer::Get(uint32_t idx)
+OpenGymTupleContainer::Get(int32_t idx)
 {
   Ptr<OpenGymDataContainer> data;
 
