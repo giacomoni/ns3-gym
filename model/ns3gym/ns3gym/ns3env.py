@@ -112,9 +112,9 @@ class Ns3ZmqBridge(object):
             mtype = boxSpacePb.dtype
 
             if mtype == pb.INT:
-                mtype = np.int
+                mtype = np.int32
             elif mtype == pb.UINT:
-                mtype = np.uint
+                mtype = np.uint32
             elif mtype == pb.DOUBLE:
                 mtype = np.float64
             else:
