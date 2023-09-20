@@ -30,7 +30,7 @@ class MyGymEnv : public OpenGymEnv
 {
 public:
   MyGymEnv ();
-  MyGymEnv (uint32_t id, Time stepTime);
+  MyGymEnv (int32_t id, Time stepTime);
   virtual ~MyGymEnv ();
   static TypeId GetTypeId (void);
   virtual void DoDispose ();
@@ -47,7 +47,7 @@ private:
   void ScheduleNextStateRead();
 
   Time m_interval;
-  uint32_t m_agentId;
+  int32_t m_agentId;
 };
 
 }

@@ -63,14 +63,14 @@ TcpGymEnv::DoDispose ()
 }
 
 void
-TcpGymEnv::SetNodeId(uint32_t id)
+TcpGymEnv::SetNodeId(int32_t id)
 {
   NS_LOG_FUNCTION (this);
   m_nodeId = id;
 }
 
 void
-TcpGymEnv::SetSocketUuid(uint32_t id)
+TcpGymEnv::SetSocketUuid(int32_t id)
 {
   NS_LOG_FUNCTION (this);
   m_socketUuid = id;
@@ -150,11 +150,11 @@ TcpGymEnv::GetActionSpace()
 {
   // new_ssThresh
   // new_cWnd
-  uint32_t parameterNum = 2;
+  int32_t parameterNum = 2;
   float low = 0.0;
   float high = 65535;
-  std::vector<uint32_t> shape = {parameterNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {parameterNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
 
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
   NS_LOG_INFO ("MyGetActionSpace: " << box);
@@ -204,7 +204,7 @@ Execute received actions
 bool
 TcpGymEnv::ExecuteActions(Ptr<OpenGymDataContainer> action)
 {
-  Ptr<OpenGymBoxContainer<uint32_t> > box = DynamicCast<OpenGymBoxContainer<uint32_t> >(action);
+  Ptr<OpenGymBoxContainer<int32_t> > box = DynamicCast<OpenGymBoxContainer<int32_t> >(action);
   m_new_ssThresh = box->GetValue(0);
   m_new_cWnd = box->GetValue(1);
 
@@ -278,10 +278,10 @@ TcpEventGymEnv::GetObservationSpace()
   // congetsion algorithm (CA) state
   // CA event
   // ECN state
-  uint32_t parameterNum = 15;
+  int32_t parameterNum = 15;
   float low = 0.0;
   float high = 1000000000.0;
-  std::vector<uint32_t> shape = {parameterNum,};
+  std::vector<int32_t> shape = {parameterNum,};
   std::string dtype = TypeNameGet<uint64_t> ();
 
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
@@ -295,8 +295,8 @@ Collect observations
 Ptr<OpenGymDataContainer>
 TcpEventGymEnv::GetObservation()
 {
-  uint32_t parameterNum = 15;
-  std::vector<uint32_t> shape = {parameterNum,};
+  int32_t parameterNum = 15;
+  std::vector<int32_t> shape = {parameterNum,};
 
   Ptr<OpenGymBoxContainer<uint64_t> > box = CreateObject<OpenGymBoxContainer<uint64_t> >(shape);
 
@@ -333,8 +333,8 @@ TcpEventGymEnv::RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSoc
   NS_LOG_FUNCTION (this);
 }
 
-uint32_t
-TcpEventGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight)
+int32_t
+TcpEventGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, int32_t bytesInFlight)
 {
   NS_LOG_FUNCTION (this);
   // pkt was lost, so penalty
@@ -350,7 +350,7 @@ TcpEventGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlig
 }
 
 void
-TcpEventGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
+TcpEventGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, int32_t segmentsAcked)
 {
   NS_LOG_FUNCTION (this);
   // pkt was acked, so reward
@@ -366,7 +366,7 @@ TcpEventGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 }
 
 void
-TcpEventGymEnv::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt)
+TcpEventGymEnv::PktsAcked (Ptr<TcpSocketState> tcb, int32_t segmentsAcked, const Time& rtt)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " PktsAcked, SegmentsAcked: " << segmentsAcked << " Rtt: " << rtt);
@@ -472,10 +472,10 @@ TcpTimeStepGymEnv::GetObservationSpace()
   // avgInterTx
   // avgInterRx
   // throughput
-  uint32_t parameterNum = 16;
+  int32_t parameterNum = 16;
   float low = 0.0;
   float high = 1000000000.0;
-  std::vector<uint32_t> shape = {parameterNum,};
+  std::vector<int32_t> shape = {parameterNum,};
   std::string dtype = TypeNameGet<uint64_t> ();
 
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
@@ -489,8 +489,8 @@ Collect observations
 Ptr<OpenGymDataContainer>
 TcpTimeStepGymEnv::GetObservation()
 {
-  uint32_t parameterNum = 16;
-  std::vector<uint32_t> shape = {parameterNum,};
+  int32_t parameterNum = 16;
+  std::vector<int32_t> shape = {parameterNum,};
 
   Ptr<OpenGymBoxContainer<uint64_t> > box = CreateObject<OpenGymBoxContainer<uint64_t> >(shape);
 
@@ -596,8 +596,8 @@ TcpTimeStepGymEnv::RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const Tcp
   m_lastPktRxTime = Simulator::Now();
 }
 
-uint32_t
-TcpTimeStepGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight)
+int32_t
+TcpTimeStepGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, int32_t bytesInFlight)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " GetSsThresh, BytesInFlight: " << bytesInFlight);
@@ -615,7 +615,7 @@ TcpTimeStepGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInF
 }
 
 void
-TcpTimeStepGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
+TcpTimeStepGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, int32_t segmentsAcked)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " IncreaseWindow, SegmentsAcked: " << segmentsAcked);
@@ -633,7 +633,7 @@ TcpTimeStepGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAck
 }
 
 void
-TcpTimeStepGymEnv::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt)
+TcpTimeStepGymEnv::PktsAcked (Ptr<TcpSocketState> tcb, int32_t segmentsAcked, const Time& rtt)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " PktsAcked, SegmentsAcked: " << segmentsAcked << " Rtt: " << rtt);

@@ -66,9 +66,9 @@ public:
   ~TcpRlBase ();
 
   virtual std::string GetName () const;
-  virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight);
-  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
-  virtual void PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt);
+  virtual int32_t GetSsThresh (Ptr<const TcpSocketState> tcb, int32_t bytesInFlight);
+  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, int32_t segmentsAcked);
+  virtual void PktsAcked (Ptr<TcpSocketState> tcb, int32_t segmentsAcked, const Time& rtt);
   virtual void CongestionStateSet (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCongState_t newState);
   virtual void CwndEvent (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCAEvent_t event);
   virtual Ptr<TcpCongestionOps> Fork ();

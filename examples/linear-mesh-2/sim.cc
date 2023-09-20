@@ -41,22 +41,22 @@ int
 main (int argc, char *argv[])
 {
   // Parameters of the environment
-  uint32_t simSeed = 1;
+  int32_t simSeed = 1;
   double simulationTime = 10; //seconds
   double envStepTime = 0.1; //seconds, ns3gym env step time interval
-  uint32_t openGymPort = 5555;
-  uint32_t testArg = 0;
+  int32_t openGymPort = 5555;
+  int32_t testArg = 0;
 
   bool eventBasedEnv = true;
 
   //Parameters of the scenario
-  uint32_t nodeNum = 5;
+  int32_t nodeNum = 5;
   double distance = 10.0;
   bool noErrors = false;
   std::string errorModelType = "ns3::NistErrorRateModel";
   bool enableFading = true;
-  uint32_t pktPerSec = 1000;
-  uint32_t payloadSize = 1500;
+  int32_t pktPerSec = 1000;
+  int32_t payloadSize = 1500;
   bool enabledMinstrel = false;
 
   // define datarates
@@ -69,7 +69,7 @@ main (int argc, char *argv[])
   dataRates.push_back("OfdmRate9MbpsBW5MHz");
   dataRates.push_back("OfdmRate12MbpsBW5MHz");
   dataRates.push_back("OfdmRate13_5MbpsBW5MHz");
-  uint32_t dataRateId = 1;
+  int32_t dataRateId = 1;
 
 
   CommandLine cmd;
@@ -175,7 +175,7 @@ main (int argc, char *argv[])
   Ipv4InterfaceContainer interfaces = ipv4.Assign (devices);
 
   //Configure static multihop routing
-  for (uint32_t i = 0; i < nodes.GetN()-1; i++){
+  for (int32_t i = 0; i < nodes.GetN()-1; i++){
     Ptr<Node> src = nodes.Get(i);
     Ptr<Node> nextHop = nodes.Get(i+1);
     Ptr<Ipv4> destIpv4 = nextHop->GetObject<Ipv4> ();
@@ -194,8 +194,8 @@ main (int argc, char *argv[])
   startTimeRng->SetAttribute ("Max", DoubleValue (1.0));
 
   uint16_t port = 1000;
-  uint32_t srcNodeId = 0;
-  uint32_t destNodeId = nodes.GetN() - 1;
+  int32_t srcNodeId = 0;
+  int32_t destNodeId = nodes.GetN() - 1;
   Ptr<Node> srcNode = nodes.Get(srcNodeId);
   Ptr<Node> dstNode = nodes.Get(destNodeId);
 
@@ -223,7 +223,7 @@ main (int argc, char *argv[])
 
   // Print node positions
   NS_LOG_UNCOND ("Node Positions:");
-  for (uint32_t i = 0; i < nodes.GetN(); i++)
+  for (int32_t i = 0; i < nodes.GetN(); i++)
   {
     Ptr<Node> node = nodes.Get(i);
     Ptr<MobilityModel> mobility = node->GetObject<MobilityModel> ();

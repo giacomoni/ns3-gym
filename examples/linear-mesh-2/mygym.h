@@ -56,7 +56,7 @@ public:
 private:
   void ScheduleNextStateRead();
   Ptr<WifiMacQueue> GetQueue(Ptr<Node> node);
-  bool SetCw(Ptr<Node> node, uint32_t cwMinValue=0, uint32_t cwMaxValue=0);
+  bool SetCw(Ptr<Node> node, int32_t cwMinValue=0, int32_t cwMaxValue=0);
 
   Time m_interval = Seconds(0.1);
   Ptr<Node> m_currentNode;

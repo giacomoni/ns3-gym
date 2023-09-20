@@ -40,11 +40,11 @@ Define observation space
 */
 Ptr<OpenGymSpace> MyGetObservationSpace(void)
 {
-  uint32_t nodeNum = NodeList::GetNNodes ();
+  int32_t nodeNum = NodeList::GetNNodes ();
   float low = 0.0;
   float high = 100.0;
-  std::vector<uint32_t> shape = {nodeNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {nodeNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
   Ptr<OpenGymBoxSpace> space = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
   NS_LOG_UNCOND ("MyGetObservationSpace: " << space);
   return space;
@@ -55,11 +55,11 @@ Define action space
 */
 Ptr<OpenGymSpace> MyGetActionSpace(void)
 {
-  uint32_t nodeNum = NodeList::GetNNodes ();
+  int32_t nodeNum = NodeList::GetNNodes ();
   float low = 0.0;
   float high = 100.0;
-  std::vector<uint32_t> shape = {nodeNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {nodeNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
   Ptr<OpenGymBoxSpace> space = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
   NS_LOG_UNCOND ("MyGetActionSpace: " << space);
   return space;
@@ -92,14 +92,14 @@ Collect observations
 */
 Ptr<OpenGymDataContainer> MyGetObservation(void)
 {
-  uint32_t nodeNum = NodeList::GetNNodes ();
-  std::vector<uint32_t> shape = {nodeNum,};
-  Ptr<OpenGymBoxContainer<uint32_t> > box = CreateObject<OpenGymBoxContainer<uint32_t> >(shape);
+  int32_t nodeNum = NodeList::GetNNodes ();
+  std::vector<int32_t> shape = {nodeNum,};
+  Ptr<OpenGymBoxContainer<int32_t> > box = CreateObject<OpenGymBoxContainer<int32_t> >(shape);
 
   for (NodeList::Iterator i = NodeList::Begin (); i != NodeList::End (); ++i) {
     Ptr<Node> node = *i;
     Ptr<WifiMacQueue> queue = GetQueue (node);
-    uint32_t value = queue->GetNPackets();
+    int32_t value = queue->GetNPackets();
     box->AddValue(value);
   }
 
@@ -136,7 +136,7 @@ std::string MyGetExtraInfo(void)
   return myInfo;
 }
 
-bool SetCw(Ptr<Node> node, uint32_t cwMinValue=0, uint32_t cwMaxValue=0)
+bool SetCw(Ptr<Node> node, int32_t cwMinValue=0, int32_t cwMaxValue=0)
 {
   Ptr<NetDevice> dev = node->GetDevice (0);
   Ptr<WifiNetDevice> wifi_dev = DynamicCast<WifiNetDevice> (dev);
@@ -165,14 +165,14 @@ bool MyExecuteActions(Ptr<OpenGymDataContainer> action)
 {
   NS_LOG_UNCOND ("MyExecuteActions: " << action);
 
-  Ptr<OpenGymBoxContainer<uint32_t> > box = DynamicCast<OpenGymBoxContainer<uint32_t> >(action);
-  std::vector<uint32_t> actionVector = box->GetData();
+  Ptr<OpenGymBoxContainer<int32_t> > box = DynamicCast<OpenGymBoxContainer<int32_t> >(action);
+  std::vector<int32_t> actionVector = box->GetData();
 
-  uint32_t nodeNum = NodeList::GetNNodes ();
-  for (uint32_t i=0; i<nodeNum; i++)
+  int32_t nodeNum = NodeList::GetNNodes ();
+  for (int32_t i=0; i<nodeNum; i++)
   {
     Ptr<Node> node = NodeList::GetNode(i);
-    uint32_t cwSize = actionVector.at(i);
+    int32_t cwSize = actionVector.at(i);
     SetCw(node, cwSize, cwSize);
   }
 
@@ -189,20 +189,20 @@ int
 main (int argc, char *argv[])
 {
   // Parameters of the environment
-  uint32_t simSeed = 1;
+  int32_t simSeed = 1;
   double simulationTime = 10; //seconds
   double envStepTime = 0.1; //seconds, ns3gym env step time interval
-  uint32_t openGymPort = 5555;
-  uint32_t testArg = 0;
+  int32_t openGymPort = 5555;
+  int32_t testArg = 0;
 
   //Parameters of the scenario
-  uint32_t nodeNum = 5;
+  int32_t nodeNum = 5;
   double distance = 10.0;
   bool noErrors = false;
   std::string errorModelType = "ns3::NistErrorRateModel";
   bool enableFading = true;
-  uint32_t pktPerSec = 1000;
-  uint32_t payloadSize = 1500;
+  int32_t pktPerSec = 1000;
+  int32_t payloadSize = 1500;
   bool enabledMinstrel = false;
 
   // define datarates
@@ -215,7 +215,7 @@ main (int argc, char *argv[])
   dataRates.push_back("OfdmRate9MbpsBW5MHz");
   dataRates.push_back("OfdmRate12MbpsBW5MHz");
   dataRates.push_back("OfdmRate13_5MbpsBW5MHz");
-  uint32_t dataRateId = 1;
+  int32_t dataRateId = 1;
 
 
   CommandLine cmd;
@@ -320,7 +320,7 @@ main (int argc, char *argv[])
   Ipv4InterfaceContainer interfaces = ipv4.Assign (devices);
 
   //Configure static multihop routing
-  for (uint32_t i = 0; i < nodes.GetN()-1; i++){
+  for (int32_t i = 0; i < nodes.GetN()-1; i++){
     Ptr<Node> src = nodes.Get(i);
     Ptr<Node> nextHop = nodes.Get(i+1);
     Ptr<Ipv4> destIpv4 = nextHop->GetObject<Ipv4> ();
@@ -339,8 +339,8 @@ main (int argc, char *argv[])
   startTimeRng->SetAttribute ("Max", DoubleValue (1.0));
 
   uint16_t port = 1000;
-  uint32_t srcNodeId = 0;
-  uint32_t destNodeId = nodes.GetN() - 1;
+  int32_t srcNodeId = 0;
+  int32_t destNodeId = nodes.GetN() - 1;
   Ptr<Node> srcNode = nodes.Get(srcNodeId);
   Ptr<Node> dstNode = nodes.Get(destNodeId);
 
@@ -371,7 +371,7 @@ main (int argc, char *argv[])
 
   // Print node positions
   NS_LOG_UNCOND ("Node Positions:");
-  for (uint32_t i = 0; i < nodes.GetN(); i++)
+  for (int32_t i = 0; i < nodes.GetN(); i++)
   {
     Ptr<Node> node = nodes.Get(i);
     Ptr<MobilityModel> mobility = node->GetObject<MobilityModel> ();

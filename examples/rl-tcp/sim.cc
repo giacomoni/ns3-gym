@@ -54,10 +54,10 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("TcpVariantsComparison");
 
-static std::vector<uint32_t> rxPkts;
+static std::vector<int32_t> rxPkts;
 
 static void
-CountRxPkts(uint32_t sinkId, Ptr<const Packet> packet, const Address & srcAddr)
+CountRxPkts(int32_t sinkId, Ptr<const Packet> packet, const Address & srcAddr)
 {
   rxPkts[sinkId]++;
 }
@@ -65,9 +65,9 @@ CountRxPkts(uint32_t sinkId, Ptr<const Packet> packet, const Address & srcAddr)
 static void
 PrintRxCount()
 {
-  uint32_t size = rxPkts.size();
+  int32_t size = rxPkts.size();
   NS_LOG_UNCOND("RxPkts:");
-  for (uint32_t i=0; i<size; i++){
+  for (int32_t i=0; i<size; i++){
     NS_LOG_UNCOND("---SinkId: "<< i << " RxPkts: " << rxPkts.at(i));
   }
 }
@@ -75,10 +75,10 @@ PrintRxCount()
 
 int main (int argc, char *argv[])
 {
-  uint32_t openGymPort = 5555;
+  int32_t openGymPort = 5555;
   double tcpEnvTimeStep = 0.1;
 
-  uint32_t nLeaf = 1;
+  int32_t nLeaf = 1;
   std::string transport_prot = "TcpRl";
   double error_p = 0.0;
   std::string bottleneck_bandwidth = "2Mbps";
@@ -87,9 +87,9 @@ int main (int argc, char *argv[])
   std::string access_delay = "20ms";
   std::string prefix_file_name = "TcpVariantsComparison";
   uint64_t data_mbytes = 0;
-  uint32_t mtu_bytes = 400;
+  int32_t mtu_bytes = 400;
   double duration = 10.0;
-  uint32_t run = 0;
+  int32_t run = 0;
   bool flow_monitor = false;
   bool sack = true;
   std::string queue_disc_type = "ns3::PfifoFastQueueDisc";
@@ -156,14 +156,14 @@ int main (int argc, char *argv[])
 
   // Calculate the ADU size
   Header* temp_header = new Ipv4Header ();
-  uint32_t ip_header = temp_header->GetSerializedSize ();
+  int32_t ip_header = temp_header->GetSerializedSize ();
   NS_LOG_LOGIC ("IP Header size is: " << ip_header);
   delete temp_header;
   temp_header = new TcpHeader ();
-  uint32_t tcp_header = temp_header->GetSerializedSize ();
+  int32_t tcp_header = temp_header->GetSerializedSize ();
   NS_LOG_LOGIC ("TCP Header size is: " << tcp_header);
   delete temp_header;
-  uint32_t tcp_adu_size = mtu_bytes - 20 - (ip_header + tcp_header);
+  int32_t tcp_adu_size = mtu_bytes - 20 - (ip_header + tcp_header);
   NS_LOG_LOGIC ("TCP ADU size is: " << tcp_adu_size);
 
   // Set the simulation start and stop time
@@ -223,7 +223,7 @@ int main (int argc, char *argv[])
   Time access_d (access_delay);
   Time bottle_d (bottleneck_delay);
 
-  uint32_t size = static_cast<uint32_t>((std::min (access_b, bottle_b).GetBitRate () / 8) *
+  int32_t size = static_cast<int32_t>((std::min (access_b, bottle_b).GetBitRate () / 8) *
     ((access_d + bottle_d + access_d) * 2).GetSeconds ());
 
   Config::SetDefault ("ns3::PfifoFastQueueDisc::MaxSize",
@@ -260,7 +260,7 @@ int main (int argc, char *argv[])
   Address sinkLocalAddress (InetSocketAddress (Ipv4Address::GetAny (), port));
   PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", sinkLocalAddress);
   ApplicationContainer sinkApps;
-  for (uint32_t i = 0; i < d.RightCount (); ++i)
+  for (int32_t i = 0; i < d.RightCount (); ++i)
   {
     sinkHelper.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
     sinkApps.Add (sinkHelper.Install (d.GetRight (i)));
@@ -268,7 +268,7 @@ int main (int argc, char *argv[])
   sinkApps.Start (Seconds (0.0));
   sinkApps.Stop  (Seconds (stop_time));
 
-  for (uint32_t i = 0; i < d.LeftCount (); ++i)
+  for (int32_t i = 0; i < d.LeftCount (); ++i)
   {
     // Create an on/off app sending packets to the left side
     AddressValue remoteAddress (InetSocketAddress (d.GetRightIpv4Address (i), port));
@@ -291,7 +291,7 @@ int main (int argc, char *argv[])
   }
 
   // Count RX packets
-  for (uint32_t i = 0; i < d.RightCount (); ++i)
+  for (int32_t i = 0; i < d.RightCount (); ++i)
   {
     rxPkts.push_back(0);
     Ptr<PacketSink> pktSink = DynamicCast<PacketSink>(sinkApps.Get(i));

@@ -41,8 +41,8 @@ public:
   static TypeId GetTypeId (void);
   virtual void DoDispose ();
 
-  void SetNodeId(uint32_t id);
-  void SetSocketUuid(uint32_t id);
+  void SetNodeId(int32_t id);
+  void SetSocketUuid(int32_t id);
 
   std::string GetTcpCongStateName(const TcpSocketState::TcpCongState_t state);
   std::string GetTcpCAEventName(const TcpSocketState::TcpCAEvent_t event);
@@ -62,10 +62,10 @@ public:
   virtual void RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSocketBase>) = 0;
 
   // TCP congestion control interface
-  virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight) = 0;
-  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked) = 0;
+  virtual int32_t GetSsThresh (Ptr<const TcpSocketState> tcb, int32_t bytesInFlight) = 0;
+  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, int32_t segmentsAcked) = 0;
   // optional functions used to collect obs
-  virtual void PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt) = 0;
+  virtual void PktsAcked (Ptr<TcpSocketState> tcb, int32_t segmentsAcked, const Time& rtt) = 0;
   virtual void CongestionStateSet (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCongState_t newState) = 0;
   virtual void CwndEvent (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCAEvent_t event) = 0;
 
@@ -79,8 +79,8 @@ public:
   } CalledFunc_t;
 
 protected:
-  uint32_t m_nodeId;
-  uint32_t m_socketUuid;
+  int32_t m_nodeId;
+  int32_t m_socketUuid;
 
   // state
   // obs has to be implemented in child class
@@ -95,8 +95,8 @@ protected:
   std::string m_info;
 
   // actions
-  uint32_t m_new_ssThresh;
-  uint32_t m_new_cWnd;
+  int32_t m_new_ssThresh;
+  int32_t m_new_cWnd;
 };
 
 
@@ -120,10 +120,10 @@ public:
   virtual void RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSocketBase>);
 
   // TCP congestion control interface
-  virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight);
-  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
+  virtual int32_t GetSsThresh (Ptr<const TcpSocketState> tcb, int32_t bytesInFlight);
+  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, int32_t segmentsAcked);
   // optional functions used to collect obs
-  virtual void PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt);
+  virtual void PktsAcked (Ptr<TcpSocketState> tcb, int32_t segmentsAcked, const Time& rtt);
   virtual void CongestionStateSet (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCongState_t newState);
   virtual void CwndEvent (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCAEvent_t event);
 
@@ -131,8 +131,8 @@ private:
   // state
   CalledFunc_t m_calledFunc;
   Ptr<const TcpSocketState> m_tcb;
-  uint32_t m_bytesInFlight;
-  uint32_t m_segmentsAcked;
+  int32_t m_bytesInFlight;
+  int32_t m_segmentsAcked;
   Time m_rtt;
   TcpSocketState::TcpCongState_t m_newState;
   TcpSocketState::TcpCAEvent_t m_event;
@@ -161,10 +161,10 @@ public:
   virtual void RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSocketBase>);
 
   // TCP congestion control interface
-  virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight);
-  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
+  virtual int32_t GetSsThresh (Ptr<const TcpSocketState> tcb, int32_t bytesInFlight);
+  virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, int32_t segmentsAcked);
   // optional functions used to collect obs
-  virtual void PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt);
+  virtual void PktsAcked (Ptr<TcpSocketState> tcb, int32_t segmentsAcked, const Time& rtt);
   virtual void CongestionStateSet (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCongState_t newState);
   virtual void CwndEvent (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCAEvent_t event);
 
@@ -174,8 +174,8 @@ private:
   Time m_timeStep;
   // state
   Ptr<const TcpSocketState> m_tcb;
-  std::vector<uint32_t> m_bytesInFlight;
-  std::vector<uint32_t> m_segmentsAcked;
+  std::vector<int32_t> m_bytesInFlight;
+  std::vector<int32_t> m_segmentsAcked;
 
   uint64_t m_rttSampleNum {0};
   Time m_rttSum {MicroSeconds (0.0)};

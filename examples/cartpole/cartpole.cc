@@ -31,11 +31,11 @@ int
 main (int argc, char *argv[])
 {
   // Parameters of the scenario
-  uint32_t simSeed = 1;
+  int32_t simSeed = 1;
   double simulationTime = 1; //seconds
   double envStepTime = 1; //seconds, ns3gym env step time interval
-  uint32_t openGymPort = 5555;
-  uint32_t testArg = 0;
+  int32_t openGymPort = 5555;
+  int32_t testArg = 0;
 
   CommandLine cmd;
   // required parameters for OpenGym interface

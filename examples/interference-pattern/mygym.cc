@@ -43,7 +43,7 @@ MyGymEnv::MyGymEnv ()
   m_channelOccupation.clear();
 }
 
-MyGymEnv::MyGymEnv (uint32_t channelNum)
+MyGymEnv::MyGymEnv (int32_t channelNum)
 {
   NS_LOG_FUNCTION (this);
   m_currentNode = 0;
@@ -90,8 +90,8 @@ MyGymEnv::GetObservationSpace()
   NS_LOG_FUNCTION (this);
   float low = 0.0;
   float high = 1.0;
-  std::vector<uint32_t> shape = {m_channelNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {m_channelNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
   Ptr<OpenGymBoxSpace> space = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
   NS_LOG_UNCOND ("GetObservationSpace: " << space);
   return space;
@@ -103,7 +103,7 @@ MyGymEnv::GetGameOver()
   NS_LOG_FUNCTION (this);
   bool isGameOver = false;
 
-  uint32_t collisionNum = 0;
+  int32_t collisionNum = 0;
   for (auto& v : m_collisions)
     collisionNum += v;
 
@@ -118,11 +118,11 @@ Ptr<OpenGymDataContainer>
 MyGymEnv::GetObservation()
 {
   NS_LOG_FUNCTION (this);
-  std::vector<uint32_t> shape = {m_channelNum,};
-  Ptr<OpenGymBoxContainer<uint32_t> > box = CreateObject<OpenGymBoxContainer<uint32_t> >(shape);
+  std::vector<int32_t> shape = {m_channelNum,};
+  Ptr<OpenGymBoxContainer<int32_t> > box = CreateObject<OpenGymBoxContainer<int32_t> >(shape);
 
-  for (uint32_t i = 0; i < m_channelOccupation.size(); ++i) {
-    uint32_t value = m_channelOccupation.at(i);
+  for (int32_t i = 0; i < m_channelOccupation.size(); ++i) {
+    int32_t value = m_channelOccupation.at(i);
     box->AddValue(value);
   }
 
@@ -138,7 +138,7 @@ MyGymEnv::GetReward()
   if (m_channelOccupation.size() == 0){
     return 0.0;
   }
-  uint32_t occupied = m_channelOccupation.at(m_currentChannel);
+  int32_t occupied = m_channelOccupation.at(m_currentChannel);
   if (occupied == 1) {
     reward = -1.0;
     m_collisions.erase(m_collisions.begin());
@@ -165,7 +165,7 @@ MyGymEnv::ExecuteActions(Ptr<OpenGymDataContainer> action)
 {
   NS_LOG_FUNCTION (this);
   Ptr<OpenGymDiscreteContainer> discrete = DynamicCast<OpenGymDiscreteContainer>(action);
-  uint32_t nextChannel = discrete->GetValue();
+  int32_t nextChannel = discrete->GetValue();
   m_currentChannel = nextChannel;
 
   NS_LOG_UNCOND ("Current Channel: " << m_currentChannel);
@@ -173,7 +173,7 @@ MyGymEnv::ExecuteActions(Ptr<OpenGymDataContainer> action)
 }
 
 void
-MyGymEnv::CollectChannelOccupation(uint32_t chanId, uint32_t occupied)
+MyGymEnv::CollectChannelOccupation(int32_t chanId, int32_t occupied)
 {
   NS_LOG_FUNCTION (this);
   m_channelOccupation.push_back(occupied);
@@ -194,12 +194,12 @@ MyGymEnv::ClearObs()
 }
 
 void
-MyGymEnv::PerformCca (Ptr<MyGymEnv> entity, uint32_t channelId, Ptr<const SpectrumValue> avgPowerSpectralDensity)
+MyGymEnv::PerformCca (Ptr<MyGymEnv> entity, int32_t channelId, Ptr<const SpectrumValue> avgPowerSpectralDensity)
 {
   double power = Integral (*(avgPowerSpectralDensity));
   double powerDbW = 10 * std::log10(power);
   double threshold = -60;
-  uint32_t busy = powerDbW > threshold;
+  int32_t busy = powerDbW > threshold;
   NS_LOG_UNCOND("Channel: " << channelId << " CCA: " << busy << " RxPower: " << powerDbW);
 
   entity->CollectChannelOccupation(channelId, busy);

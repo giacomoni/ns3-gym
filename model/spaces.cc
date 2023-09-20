@@ -143,14 +143,14 @@ OpenGymBoxSpace::OpenGymBoxSpace ()
   NS_LOG_FUNCTION (this);
 }
 
-OpenGymBoxSpace::OpenGymBoxSpace (float low, float high, std::vector<uint32_t> shape, std::string dtype):
+OpenGymBoxSpace::OpenGymBoxSpace (float low, float high, std::vector<int32_t> shape, std::string dtype):
   m_low(low), m_high(high), m_shape(shape), m_dtypeName(dtype)
 {
   NS_LOG_FUNCTION (this);
   SetDtype ();
 }
 
-OpenGymBoxSpace::OpenGymBoxSpace (std::vector<float> low, std::vector<float> high, std::vector<uint32_t> shape, std::string dtype):
+OpenGymBoxSpace::OpenGymBoxSpace (std::vector<float> low, std::vector<float> high, std::vector<int32_t> shape, std::string dtype):
   m_low(0), m_high(0), m_shape(shape), m_dtypeName(dtype), m_lowVec(low), m_highVec(high)
 
 {
@@ -181,7 +181,7 @@ OpenGymBoxSpace::SetDtype ()
   std::string name = m_dtypeName;
   if (name == "int8_t" || name == "int16_t" || name == "int32_t" || name == "int64_t")
     m_dtype = ns3opengym::INT;
-  else if (name == "uint8_t" || name == "uint16_t" || name == "uint32_t" || name == "uint64_t")
+  else if (name == "uint8_t" || name == "uint16_t" || name == "int32_t" || name == "uint64_t")
     m_dtype = ns3opengym::UINT;
   else if (name == "float")
     m_dtype = ns3opengym::FLOAT;
@@ -205,7 +205,7 @@ OpenGymBoxSpace::GetHigh()
   return m_high;
 }
 
-std::vector<uint32_t>
+std::vector<int32_t>
 OpenGymBoxSpace::GetShape()
 {
   NS_LOG_FUNCTION (this);
@@ -223,7 +223,7 @@ OpenGymBoxSpace::GetSpaceDescription()
   boxSpacePb.set_low(GetLow());
   boxSpacePb.set_high(GetHigh());
 
-  std::vector<uint32_t> shape = GetShape();
+  std::vector<int32_t> shape = GetShape();
   for (auto i = shape.begin(); i != shape.end(); ++i)
   {
     boxSpacePb.add_shape(*i);
@@ -289,7 +289,7 @@ OpenGymTupleSpace::Add(Ptr<OpenGymSpace> space)
 }
 
 Ptr<OpenGymSpace>
-OpenGymTupleSpace::Get(uint32_t idx)
+OpenGymTupleSpace::Get(int32_t idx)
 {
   NS_LOG_FUNCTION (this);
   Ptr<OpenGymSpace> space;

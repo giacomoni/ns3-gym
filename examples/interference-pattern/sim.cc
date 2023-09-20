@@ -38,14 +38,14 @@ NS_LOG_COMPONENT_DEFINE ("Interference-Pattern");
 int main (int argc, char *argv[])
 {
   // Parameters of the environment
-  uint32_t simSeed = 1;
+  int32_t simSeed = 1;
   double simulationTime = 10; //seconds
   double envStepTime = 0.1; //seconds, ns3gym env step time interval
-  uint32_t openGymPort = 5555;
-  uint32_t testArg = 0;
+  int32_t openGymPort = 5555;
+  int32_t testArg = 0;
 
   //Parameters of the scenario
-  uint32_t nodeNum = 2;
+  int32_t nodeNum = 2;
   double distance = 10.0;
   bool enableFading = false;
   double interfererPower = 10;
@@ -54,15 +54,15 @@ int main (int argc, char *argv[])
   double interferenceSlotTime = 0.1;  // seconds;
 
   //        time,    channel usage
-  std::map<uint32_t, std::vector<uint32_t> > interferencePattern;
-  interferencePattern.insert(std::pair<uint32_t, std::vector<uint32_t> > (0, {1,0,0,0}));
-  interferencePattern.insert(std::pair<uint32_t, std::vector<uint32_t> > (1, {0,1,0,0}));
-  interferencePattern.insert(std::pair<uint32_t, std::vector<uint32_t> > (2, {0,0,1,0}));
-  interferencePattern.insert(std::pair<uint32_t, std::vector<uint32_t> > (3, {0,0,0,1}));
+  std::map<int32_t, std::vector<int32_t> > interferencePattern;
+  interferencePattern.insert(std::pair<int32_t, std::vector<int32_t> > (0, {1,0,0,0}));
+  interferencePattern.insert(std::pair<int32_t, std::vector<int32_t> > (1, {0,1,0,0}));
+  interferencePattern.insert(std::pair<int32_t, std::vector<int32_t> > (2, {0,0,1,0}));
+  interferencePattern.insert(std::pair<int32_t, std::vector<int32_t> > (3, {0,0,0,1}));
 
   // set channel number correctly, do not modify
-  std::vector<uint32_t> tmp = interferencePattern.at(0);
-  uint32_t channNum = tmp.size();
+  std::vector<int32_t> tmp = interferencePattern.at(0);
+  int32_t channNum = tmp.size();
 
   CommandLine cmd;
   // required parameters for OpenGym interface
@@ -116,8 +116,8 @@ int main (int argc, char *argv[])
   mobility.Install (nodes);
 
   // Define channel models
-  std::map<uint32_t, Ptr<SpectrumModel> > spectrumModels;
-  for (uint32_t chanId=0; chanId<channNum; chanId++) {
+  std::map<int32_t, Ptr<SpectrumModel> > spectrumModels;
+  for (int32_t chanId=0; chanId<channNum; chanId++) {
     double fc = 5200e6 + 20e6 * chanId;
     BandInfo bandInfo;
     bandInfo.fc = fc;
@@ -126,7 +126,7 @@ int main (int argc, char *argv[])
     Bands bands;
     bands.push_back (bandInfo);
     Ptr<SpectrumModel> sm = Create<SpectrumModel> (bands);
-    spectrumModels.insert(std::pair<uint32_t, Ptr<SpectrumModel>>(chanId, sm));
+    spectrumModels.insert(std::pair<int32_t, Ptr<SpectrumModel>>(chanId, sm));
   }
 
   // Spectrum Analyzer --- Channel Sensing
@@ -137,12 +137,12 @@ int main (int argc, char *argv[])
   spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (1e-15));     // -120 dBm/Hz
   NetDeviceContainer spectrumAnalyzers;
   
-  for (uint32_t chanId=0; chanId<channNum; chanId++) {
+  for (int32_t chanId=0; chanId<channNum; chanId++) {
     spectrumAnalyzerHelper.SetRxSpectrumModel (spectrumModels.at(chanId));
     spectrumAnalyzers.Add(spectrumAnalyzerHelper.Install (sensingNode));
   }
 
-  for (uint32_t i=0; i< spectrumAnalyzers.GetN(); i++)
+  for (int32_t i=0; i< spectrumAnalyzers.GetN(); i++)
   {
     Ptr<NetDevice> netDev = spectrumAnalyzers.Get(i);
     Ptr<NonCommunicatingNetDevice> nonCommNetDev = DynamicCast<NonCommunicatingNetDevice>(netDev);
@@ -152,9 +152,9 @@ int main (int argc, char *argv[])
 
     std::ostringstream oss;
     oss.str ("");
-    uint32_t devId = netDev->GetIfIndex();
+    int32_t devId = netDev->GetIfIndex();
     oss << "/NodeList/" << sensingNode->GetId () << "/DeviceList/" << devId << "/$ns3::NonCommunicatingNetDevice/Phy/AveragePowerSpectralDensityReport";
-    uint32_t channelId = i;
+    int32_t channelId = i;
     Config::ConnectWithoutContext (oss.str (),MakeBoundCallback (&MyGymEnv::PerformCca, myGymEnv, channelId));
   }
 
@@ -166,7 +166,7 @@ int main (int argc, char *argv[])
   waveformGeneratorHelper.SetPhyAttribute ("DutyCycle", DoubleValue (1.0));
   NetDeviceContainer waveformGeneratorDevices;
 
-  for (uint32_t chanId=0; chanId<channNum; chanId++) {
+  for (int32_t chanId=0; chanId<channNum; chanId++) {
     Ptr<SpectrumValue> wgPsd = Create<SpectrumValue> (spectrumModels.at(chanId));
     *wgPsd = interfererPower / (20e6);
     NS_LOG_DEBUG ("wgPsd : " << *wgPsd << " integrated power: " << Integral (*(GetPointer (wgPsd))));
@@ -178,12 +178,12 @@ int main (int argc, char *argv[])
   double scheduledTime = 0;
   while (scheduledTime < simulationTime)
   {
-    std::map<uint32_t, std::vector<uint32_t> >::iterator it;
+    std::map<int32_t, std::vector<int32_t> >::iterator it;
     for (it=interferencePattern.begin(); it!=interferencePattern.end(); it++) {
-      std::vector<uint32_t> channels = (*it).second;
+      std::vector<int32_t> channels = (*it).second;
 
-      for (uint32_t chanId = 0; chanId < channels.size(); chanId++){
-        uint32_t occupied = channels.at(chanId);
+      for (int32_t chanId = 0; chanId < channels.size(); chanId++){
+        int32_t occupied = channels.at(chanId);
         NS_LOG_DEBUG("scheduledTime: " << scheduledTime << " ChanId " << chanId << " Occupied: " << occupied);
         if (occupied == 1) {
           Simulator::Schedule (Seconds (scheduledTime), &WaveformGenerator::Start,

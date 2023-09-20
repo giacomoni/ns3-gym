@@ -76,8 +76,8 @@ class OpenGymBoxSpace : public OpenGymSpace
 {
 public:
   OpenGymBoxSpace ();
-  OpenGymBoxSpace (float low, float high, std::vector<uint32_t> shape, std::string dtype);
-  OpenGymBoxSpace (std::vector<float> low, std::vector<float> high, std::vector<uint32_t> shape, std::string dtype);
+  OpenGymBoxSpace (float low, float high, std::vector<int32_t> shape, std::string dtype);
+  OpenGymBoxSpace (std::vector<float> low, std::vector<float> high, std::vector<int32_t> shape, std::string dtype);
   virtual ~OpenGymBoxSpace ();
 
   static TypeId GetTypeId ();
@@ -86,7 +86,7 @@ public:
 
   float GetLow();
   float GetHigh();
-  std::vector<uint32_t> GetShape();
+  std::vector<int32_t> GetShape();
 
   virtual void Print(std::ostream& where) const;
   friend std::ostream& operator<< (std::ostream& os, const Ptr<OpenGymBoxSpace> space)
@@ -105,7 +105,7 @@ private:
 
 	float m_low;
 	float m_high;
-	std::vector<uint32_t> m_shape;
+	std::vector<int32_t> m_shape;
   std::string m_dtypeName;
   std::vector<float> m_lowVec;
   std::vector<float> m_highVec;
@@ -125,7 +125,7 @@ public:
   virtual ns3opengym::SpaceDescription GetSpaceDescription();
 
   bool Add(Ptr<OpenGymSpace> space);
-  Ptr<OpenGymSpace> Get(uint32_t idx);
+  Ptr<OpenGymSpace> Get(int32_t idx);
 
   virtual void Print(std::ostream& where) const;
   friend std::ostream& operator<< (std::ostream& os, const Ptr<OpenGymTupleSpace> space)

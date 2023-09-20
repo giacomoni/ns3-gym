@@ -36,7 +36,7 @@ class MyGymEnv : public OpenGymEnv
 {
 public:
   MyGymEnv ();
-  MyGymEnv (uint32_t channelNum);
+  MyGymEnv (int32_t channelNum);
   virtual ~MyGymEnv ();
   static TypeId GetTypeId (void);
   virtual void DoDispose ();
@@ -51,25 +51,25 @@ public:
 
   // the function has to be static to work with MakeBoundCallback
   // that is why we pass pointer to MyGymEnv instance to be able to store the context (node, etc)
-  static void PerformCca(Ptr<MyGymEnv> entity, uint32_t channelId, Ptr<const SpectrumValue> avgPowerSpectralDensity);
-  void CollectChannelOccupation(uint32_t chanId, uint32_t occupied);
+  static void PerformCca(Ptr<MyGymEnv> entity, int32_t channelId, Ptr<const SpectrumValue> avgPowerSpectralDensity);
+  void CollectChannelOccupation(int32_t chanId, int32_t occupied);
   bool CheckIfReady();
   void ClearObs();
 
 private:
   void ScheduleNextStateRead();
   Ptr<WifiMacQueue> GetQueue(Ptr<Node> node);
-  bool SetCw(Ptr<Node> node, uint32_t cwMinValue=0, uint32_t cwMaxValue=0);
+  bool SetCw(Ptr<Node> node, int32_t cwMinValue=0, int32_t cwMaxValue=0);
 
   Time m_interval = Seconds(0.1);
   Ptr<Node> m_currentNode;
   uint64_t m_rxPktNum;
-  uint32_t m_channelNum;
-  std::vector<uint32_t> m_channelOccupation;
-  uint32_t m_currentChannel;
+  int32_t m_channelNum;
+  std::vector<int32_t> m_channelOccupation;
+  int32_t m_currentChannel;
 
-  uint32_t m_collisionTh;
-  std::vector<uint32_t> m_collisions = {0,0,0,0,0,0,0,0,0,0,};
+  int32_t m_collisionTh;
+  std::vector<int32_t> m_collisions = {0,0,0,0,0,0,0,0,0,0,};
 };
 
 }

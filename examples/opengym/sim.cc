@@ -31,11 +31,11 @@ Define observation space
 */
 Ptr<OpenGymSpace> MyGetObservationSpace(void)
 {
-  uint32_t nodeNum = 5;
+  int32_t nodeNum = 5;
   float low = 0.0;
   float high = 10.0;
-  std::vector<uint32_t> shape = {nodeNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {nodeNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
   Ptr<OpenGymBoxSpace> space = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
   NS_LOG_UNCOND ("MyGetObservationSpace: " << space);
   return space;
@@ -46,7 +46,7 @@ Define action space
 */
 Ptr<OpenGymSpace> MyGetActionSpace(void)
 {
-  uint32_t nodeNum = 5;
+  int32_t nodeNum = 5;
 
   Ptr<OpenGymDiscreteSpace> space = CreateObject<OpenGymDiscreteSpace> (nodeNum);
   NS_LOG_UNCOND ("MyGetActionSpace: " << space);
@@ -75,17 +75,17 @@ Collect observations
 */
 Ptr<OpenGymDataContainer> MyGetObservation(void)
 {
-  uint32_t nodeNum = 5;
-  uint32_t low = 0.0;
-  uint32_t high = 10.0;
+  int32_t nodeNum = 5;
+  int32_t low = 0.0;
+  int32_t high = 10.0;
   Ptr<UniformRandomVariable> rngInt = CreateObject<UniformRandomVariable> ();
 
-  std::vector<uint32_t> shape = {nodeNum,};
-  Ptr<OpenGymBoxContainer<uint32_t> > box = CreateObject<OpenGymBoxContainer<uint32_t> >(shape);
+  std::vector<int32_t> shape = {nodeNum,};
+  Ptr<OpenGymBoxContainer<int32_t> > box = CreateObject<OpenGymBoxContainer<int32_t> >(shape);
 
   // generate random data
-  for (uint32_t i = 0; i<nodeNum; i++){
-    uint32_t value = rngInt->GetInteger(low, high);
+  for (int32_t i = 0; i<nodeNum; i++){
+    int32_t value = rngInt->GetInteger(low, high);
     box->AddValue(value);
   }
 
@@ -135,11 +135,11 @@ int
 main (int argc, char *argv[])
 {
   // Parameters of the scenario
-  uint32_t simSeed = 1;
+  int32_t simSeed = 1;
   double simulationTime = 1; //seconds
   double envStepTime = 0.1; //seconds, ns3gym env step time interval
-  uint32_t openGymPort = 5555;
-  uint32_t testArg = 0;
+  int32_t openGymPort = 5555;
+  int32_t testArg = 0;
 
   CommandLine cmd;
   // required parameters for OpenGym interface

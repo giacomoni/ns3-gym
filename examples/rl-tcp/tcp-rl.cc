@@ -132,8 +132,8 @@ TcpRlBase::ConnectSocketCallbacks()
     tcp->GetAttribute ("SocketList", socketVec);
     NS_LOG_DEBUG("Node: " << node->GetId() << " TCP socket num: " << socketVec.GetN());
 
-    uint32_t sockNum = socketVec.GetN();
-    for (uint32_t j=0; j<sockNum; j++) {
+    int32_t sockNum = socketVec.GetN();
+    for (int32_t j=0; j<sockNum; j++) {
       Ptr<Object> sockObj = socketVec.Get(j);
       Ptr<TcpSocketBase> tcpSocket = DynamicCast<TcpSocketBase> (sockObj);
       NS_LOG_DEBUG("Node: " << node->GetId() << " TCP Socket: " << tcpSocket);
@@ -173,9 +173,9 @@ TcpRlBase::GetName () const
   return "TcpRlBase";
 }
 
-uint32_t
+int32_t
 TcpRlBase::GetSsThresh (Ptr<const TcpSocketState> state,
-                         uint32_t bytesInFlight)
+                         int32_t bytesInFlight)
 {
   NS_LOG_FUNCTION (this << state << bytesInFlight);
 
@@ -183,7 +183,7 @@ TcpRlBase::GetSsThresh (Ptr<const TcpSocketState> state,
     CreateGymEnv();
   }
 
-  uint32_t newSsThresh = 0;
+  int32_t newSsThresh = 0;
   if (m_tcpGymEnv) {
       newSsThresh = m_tcpGymEnv->GetSsThresh(state, bytesInFlight);
   }
@@ -192,7 +192,7 @@ TcpRlBase::GetSsThresh (Ptr<const TcpSocketState> state,
 }
 
 void
-TcpRlBase::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
+TcpRlBase::IncreaseWindow (Ptr<TcpSocketState> tcb, int32_t segmentsAcked)
 {
   NS_LOG_FUNCTION (this << tcb << segmentsAcked);
 
@@ -206,7 +206,7 @@ TcpRlBase::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 }
 
 void
-TcpRlBase::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt)
+TcpRlBase::PktsAcked (Ptr<TcpSocketState> tcb, int32_t segmentsAcked, const Time& rtt)
 {
   NS_LOG_FUNCTION (this);
 

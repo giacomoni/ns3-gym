@@ -84,11 +84,11 @@ Ptr<OpenGymSpace>
 MyGymEnv::GetActionSpace()
 {
   NS_LOG_FUNCTION (this);
-  uint32_t nodeNum = NodeList::GetNNodes ();
+  int32_t nodeNum = NodeList::GetNNodes ();
   float low = 0.0;
   float high = 100.0;
-  std::vector<uint32_t> shape = {nodeNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {nodeNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
   Ptr<OpenGymBoxSpace> space = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
   NS_LOG_UNCOND ("GetActionSpace: " << space);
   return space;
@@ -98,11 +98,11 @@ Ptr<OpenGymSpace>
 MyGymEnv::GetObservationSpace()
 {
   NS_LOG_FUNCTION (this);
-  uint32_t nodeNum = NodeList::GetNNodes ();
+  int32_t nodeNum = NodeList::GetNNodes ();
   float low = 0.0;
   float high = 100.0;
-  std::vector<uint32_t> shape = {nodeNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {nodeNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
   Ptr<OpenGymBoxSpace> space = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
   NS_LOG_UNCOND ("GetObservationSpace: " << space);
   return space;
@@ -134,14 +134,14 @@ Ptr<OpenGymDataContainer>
 MyGymEnv::GetObservation()
 {
   NS_LOG_FUNCTION (this);
-  uint32_t nodeNum = NodeList::GetNNodes ();
-  std::vector<uint32_t> shape = {nodeNum,};
-  Ptr<OpenGymBoxContainer<uint32_t> > box = CreateObject<OpenGymBoxContainer<uint32_t> >(shape);
+  int32_t nodeNum = NodeList::GetNNodes ();
+  std::vector<int32_t> shape = {nodeNum,};
+  Ptr<OpenGymBoxContainer<int32_t> > box = CreateObject<OpenGymBoxContainer<int32_t> >(shape);
 
   for (NodeList::Iterator i = NodeList::Begin (); i != NodeList::End (); ++i) {
     Ptr<Node> node = *i;
     Ptr<WifiMacQueue> queue = GetQueue (node);
-    uint32_t value = queue->GetNPackets();
+    int32_t value = queue->GetNPackets();
     box->AddValue(value);
   }
 
@@ -174,7 +174,7 @@ MyGymEnv::GetExtraInfo()
 }
 
 bool
-MyGymEnv::SetCw(Ptr<Node> node, uint32_t cwMinValue, uint32_t cwMaxValue)
+MyGymEnv::SetCw(Ptr<Node> node, int32_t cwMinValue, int32_t cwMaxValue)
 {
   Ptr<NetDevice> dev = node->GetDevice (0);
   Ptr<WifiNetDevice> wifi_dev = DynamicCast<WifiNetDevice> (dev);
@@ -201,14 +201,14 @@ MyGymEnv::ExecuteActions(Ptr<OpenGymDataContainer> action)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_UNCOND ("MyExecuteActions: " << action);
-  Ptr<OpenGymBoxContainer<uint32_t> > box = DynamicCast<OpenGymBoxContainer<uint32_t> >(action);
-  std::vector<uint32_t> actionVector = box->GetData();
+  Ptr<OpenGymBoxContainer<int32_t> > box = DynamicCast<OpenGymBoxContainer<int32_t> >(action);
+  std::vector<int32_t> actionVector = box->GetData();
 
-  uint32_t nodeNum = NodeList::GetNNodes ();
-  for (uint32_t i=0; i<nodeNum; i++)
+  int32_t nodeNum = NodeList::GetNNodes ();
+  for (int32_t i=0; i<nodeNum; i++)
   {
     Ptr<Node> node = NodeList::GetNode(i);
-    uint32_t cwSize = actionVector.at(i);
+    int32_t cwSize = actionVector.at(i);
     SetCw(node, cwSize, cwSize);
   }
 

@@ -57,7 +57,7 @@ class OpenGymDiscreteContainer : public OpenGymDataContainer
 {
 public:
   OpenGymDiscreteContainer ();
-  OpenGymDiscreteContainer (uint32_t n);
+  OpenGymDiscreteContainer (int32_t n);
   virtual ~OpenGymDiscreteContainer ();
 
   static TypeId GetTypeId ();
@@ -71,16 +71,16 @@ public:
     return os;
   }
 
-  bool SetValue(uint32_t value);
-  uint32_t GetValue();
+  bool SetValue(int32_t value);
+  int32_t GetValue();
 
 protected:
   // Inherited
   virtual void DoInitialize (void);
   virtual void DoDispose (void);
 
-  uint32_t m_n;
-  uint32_t m_value;
+  int32_t m_n;
+  int32_t m_value;
 };
 
 template <typename T = float>
@@ -88,7 +88,7 @@ class OpenGymBoxContainer : public OpenGymDataContainer
 {
 public:
   OpenGymBoxContainer ();
-  OpenGymBoxContainer (std::vector<uint32_t> shape);
+  OpenGymBoxContainer (std::vector<int32_t> shape);
   virtual ~OpenGymBoxContainer ();
 
   static TypeId GetTypeId ();
@@ -103,12 +103,12 @@ public:
   }
 
   bool AddValue(T value);
-  T GetValue(uint32_t idx);
+  T GetValue(int32_t idx);
 
   bool SetData(std::vector<T> data);
   std::vector<T> GetData();
 
-  std::vector<uint32_t> GetShape();
+  std::vector<int32_t> GetShape();
 
 protected:
   // Inherited
@@ -117,7 +117,7 @@ protected:
 
 private:
   void SetDtype();
-	std::vector<uint32_t> m_shape;
+	std::vector<int32_t> m_shape;
 	ns3opengym::Dtype m_dtype;
 	std::vector<T> m_data;
 };
@@ -142,7 +142,7 @@ OpenGymBoxContainer<T>::OpenGymBoxContainer()
 }
 
 template <typename T>
-OpenGymBoxContainer<T>::OpenGymBoxContainer(std::vector<uint32_t> shape):
+OpenGymBoxContainer<T>::OpenGymBoxContainer(std::vector<int32_t> shape):
 	m_shape(shape)
 {
   SetDtype();
@@ -160,7 +160,7 @@ OpenGymBoxContainer<T>::SetDtype ()
   std::string name = TypeNameGet<T> ();
   if (name == "int8_t" || name == "int16_t" || name == "int32_t" || name == "int64_t") 
     m_dtype = ns3opengym::INT;
-  else if (name == "uint8_t" || name == "uint16_t" || name == "uint32_t" || name == "uint64_t") 
+  else if (name == "uint8_t" || name == "uint16_t" || name == "int32_t" || name == "uint64_t") 
     m_dtype = ns3opengym::UINT;
   else if (name == "float")
     m_dtype = ns3opengym::FLOAT;
@@ -189,7 +189,7 @@ OpenGymBoxContainer<T>::GetDataContainerPbMsg()
   ns3opengym::DataContainer dataContainerPbMsg;
   ns3opengym::BoxDataContainer boxContainerPbMsg;
 
-  std::vector<uint32_t> shape = GetShape();
+  std::vector<int32_t> shape = GetShape();
   *boxContainerPbMsg.mutable_shape() = {shape.begin(), shape.end()};
 
 
@@ -227,7 +227,7 @@ OpenGymBoxContainer<T>::AddValue(T value)
 
 template <typename T>
 T
-OpenGymBoxContainer<T>::GetValue(uint32_t idx)
+OpenGymBoxContainer<T>::GetValue(int32_t idx)
 {
   T data = 0;
   if (idx < m_data.size())
@@ -246,7 +246,7 @@ OpenGymBoxContainer<T>::SetData(std::vector<T> data)
 }
 
 template <typename T>
-std::vector<uint32_t>
+std::vector<int32_t>
 OpenGymBoxContainer<T>::GetShape()
 {
   return m_shape;
@@ -294,7 +294,7 @@ public:
   }
 
   bool Add(Ptr<OpenGymDataContainer> space);
-  Ptr<OpenGymDataContainer> Get(uint32_t idx);
+  Ptr<OpenGymDataContainer> Get(int32_t idx);
 
 protected:
   // Inherited

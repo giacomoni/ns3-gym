@@ -41,7 +41,7 @@ MyGymEnv::MyGymEnv ()
   Simulator::Schedule (Seconds(0.0), &MyGymEnv::ScheduleNextStateRead, this);
 }
 
-MyGymEnv::MyGymEnv (uint32_t id, Time stepTime)
+MyGymEnv::MyGymEnv (int32_t id, Time stepTime)
 {
   NS_LOG_FUNCTION (this);
   m_agentId = id;
@@ -86,11 +86,11 @@ Define observation space
 Ptr<OpenGymSpace>
 MyGymEnv::GetObservationSpace()
 {
-  uint32_t nodeNum = 5;
+  int32_t nodeNum = 5;
   float low = 0.0;
   float high = 10.0;
-  std::vector<uint32_t> shape = {nodeNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {nodeNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
 
   Ptr<OpenGymDiscreteSpace> discrete = CreateObject<OpenGymDiscreteSpace> (nodeNum);
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
@@ -109,11 +109,11 @@ Define action space
 Ptr<OpenGymSpace>
 MyGymEnv::GetActionSpace()
 {
-  uint32_t nodeNum = 5;
+  int32_t nodeNum = 5;
   float low = 0.0;
   float high = 10.0;
-  std::vector<uint32_t> shape = {nodeNum,};
-  std::string dtype = TypeNameGet<uint32_t> ();
+  std::vector<int32_t> shape = {nodeNum,};
+  std::string dtype = TypeNameGet<int32_t> ();
 
   Ptr<OpenGymDiscreteSpace> discrete = CreateObject<OpenGymDiscreteSpace> (nodeNum);
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
@@ -149,22 +149,22 @@ Collect observations
 Ptr<OpenGymDataContainer>
 MyGymEnv::GetObservation()
 {
-  uint32_t nodeNum = 5;
-  uint32_t low = 0.0;
-  uint32_t high = 10.0;
+  int32_t nodeNum = 5;
+  int32_t low = 0.0;
+  int32_t high = 10.0;
   Ptr<UniformRandomVariable> rngInt = CreateObject<UniformRandomVariable> ();
 
-  std::vector<uint32_t> shape = {nodeNum,};
-  Ptr<OpenGymBoxContainer<uint32_t> > box = CreateObject<OpenGymBoxContainer<uint32_t> >(shape);
+  std::vector<int32_t> shape = {nodeNum,};
+  Ptr<OpenGymBoxContainer<int32_t> > box = CreateObject<OpenGymBoxContainer<int32_t> >(shape);
 
   // generate random data
-  for (uint32_t i = 0; i<nodeNum; i++){
-    uint32_t value = rngInt->GetInteger(low, high);
+  for (int32_t i = 0; i<nodeNum; i++){
+    int32_t value = rngInt->GetInteger(low, high);
     box->AddValue(value);
   }
 
   Ptr<OpenGymDiscreteContainer> discrete = CreateObject<OpenGymDiscreteContainer>(nodeNum);
-  uint32_t value = rngInt->GetInteger(low, high);
+  int32_t value = rngInt->GetInteger(low, high);
   discrete->SetValue(value);
 
   Ptr<OpenGymTupleContainer> data = CreateObject<OpenGymTupleContainer> ();
@@ -172,7 +172,7 @@ MyGymEnv::GetObservation()
   data->Add(discrete);
 
   // Print data from tuple
-  Ptr<OpenGymBoxContainer<uint32_t> > mbox = DynamicCast<OpenGymBoxContainer<uint32_t> >(data->Get(0));
+  Ptr<OpenGymBoxContainer<int32_t> > mbox = DynamicCast<OpenGymBoxContainer<int32_t> >(data->Get(0));
   Ptr<OpenGymDiscreteContainer> mdiscrete = DynamicCast<OpenGymDiscreteContainer>(data->Get(1));
   NS_LOG_UNCOND ("AgendId: "<< m_agentId << " MyGetObservation: " << data);
   NS_LOG_UNCOND ("---" << mbox);
@@ -211,7 +211,7 @@ bool
 MyGymEnv::ExecuteActions(Ptr<OpenGymDataContainer> action)
 {
   Ptr<OpenGymDictContainer> dict = DynamicCast<OpenGymDictContainer>(action);
-  Ptr<OpenGymBoxContainer<uint32_t> > box = DynamicCast<OpenGymBoxContainer<uint32_t> >(dict->Get("box"));
+  Ptr<OpenGymBoxContainer<int32_t> > box = DynamicCast<OpenGymBoxContainer<int32_t> >(dict->Get("box"));
   Ptr<OpenGymDiscreteContainer> discrete = DynamicCast<OpenGymDiscreteContainer>(dict->Get("discrete"));
 
   NS_LOG_UNCOND ("AgendId: "<< m_agentId << " MyExecuteActions: " << action);
