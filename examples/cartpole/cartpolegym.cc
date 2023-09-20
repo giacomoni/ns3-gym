@@ -134,10 +134,10 @@ Define observation space
 Ptr<OpenGymSpace>
 CartpoleGymEnv::GetObservationSpace()
 {
-  uint32_t nodeNum = 4;
+  int32_t nodeNum = 4;
   float low = 0.0;
   float high = 10.0;
-  std::vector<uint32_t> shape = {nodeNum,};
+  std::vector<int32_t> shape = {nodeNum,};
   std::string dtype = TypeNameGet<float> ();
 
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (-std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), shape, dtype);
@@ -153,8 +153,8 @@ Define action space
 Ptr<OpenGymSpace>
 CartpoleGymEnv::GetActionSpace()
 {
-  uint32_t nodeNum = 2;
-  std::vector<uint32_t> shape = {nodeNum,};
+  int32_t nodeNum = 2;
+  std::vector<int32_t> shape = {nodeNum,};
 
   Ptr<OpenGymDiscreteSpace> discrete = CreateObject<OpenGymDiscreteSpace> (nodeNum);
 
@@ -187,12 +187,12 @@ Collect observations
 Ptr<OpenGymDataContainer>
 CartpoleGymEnv::GetObservation()
 {
-  uint32_t nodeNum = 4;
-  std::vector<uint32_t> shape = {nodeNum,};
+  int32_t nodeNum = 4;
+  std::vector<int32_t> shape = {nodeNum,};
   Ptr<OpenGymBoxContainer<float> > box = CreateObject<OpenGymBoxContainer<float> >(shape);
 
   // Copy state values from state array
-  for (uint32_t i = 0; i<nodeNum; i++){
+  for (int32_t i = 0; i<nodeNum; i++){
     float value = state[i];
     box->AddValue(value);
   }
